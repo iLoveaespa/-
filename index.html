@@ -61,6 +61,14 @@
       font-size: 14px;
       line-height: 1.7;
     }
+    .increase {
+      color: #F92E42;
+      font-weight: 600;
+    }
+    .decrease {
+      color: #2C77FA;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -80,6 +88,12 @@
   </div>
 
   <script>
+    function formatNumber(value) {
+      return Math.abs(value).toLocaleString("en-US", {
+        maximumFractionDigits: 5
+      });
+    }
+
     function calculate() {
       const A = parseFloat(document.getElementById("a").value);
       const B = parseFloat(document.getElementById("b").value);
@@ -90,25 +104,42 @@
         return;
       }
 
-      const increase = B - A;
+      const diff = B - A;
+
+      let sign = "";
+      let className = "";
+
+      if (diff > 0) {
+        sign = "+";
+        className = "increase";
+      } else if (diff < 0) {
+        sign = "-";
+        className = "decrease";
+      }
 
       if (A === 0) {
         result.innerHTML = `
-          1️⃣ 증가한 값: <b>${increase}</b><br>
+          1️⃣ 증가한 값: <span class="${className}">${sign}${formatNumber(diff)}</span><br>
           2️⃣ 증가율: <b>계산 불가 (A가 0)</b>
         `;
         return;
       }
 
-      const percent =
-        Math.round((increase / A) * 100 * 1e6) / 1e6;
+      const percent = (diff / A) * 100;
 
       result.innerHTML = `
-        1️⃣ 증가한 값: <b>${increase}</b><br>
-        2️⃣ 증가율: <b>${percent}%</b>
+        1️⃣ 증가한 값:
+        <span class="${className}">
+          ${sign}${formatNumber(diff)}
+        </span><br>
+        2️⃣ 증가율:
+        <span class="${className}">
+          ${sign}${formatNumber(percent)}%
+        </span>
       `;
     }
   </script>
 
 </body>
 </html>
+
